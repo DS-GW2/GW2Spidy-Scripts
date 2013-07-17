@@ -1,0 +1,108 @@
+<job id="SpidyExample">
+	<Script type="text/javascript" src="json2.js" />
+        <Script type="text/javascript" src="gw2spidy.js" />
+	<script type="text/javascript">
+                spidy = new GW2Spidy();
+
+
+		// Sorted for faster searching.  13716 is Eye of Power Scepter.
+		var blackList = [ 13716, 36521, 36533, 36536, 36545, 36551, 36554, 36557, 36563, 36566, 36569, 36575, 36581, 36587, 36590, 36593 ]; 
+
+		var resultArray = new Array();
+		var disciplinesList = spidy.DisciplinesList();
+		var obj = spidy.RecipesOfDisciplines(1, 2, 3, 4, 5, 6);	
+		var minCraftItem;
+		var minCraftingCost = 9007199254740992; // maxint?
+
+		for (var i in obj) {
+			var result = obj[i];
+			if (IsBlackListed(result.result_item_data_id)) continue;	
+
+			if (result.rating < 375 || result.crafting_cost >= minCraftingCost) continue;
+
+			var item;
+			item = spidy.ItemData(result.result_item_data_id);
+
+			if (item.restriction_level >= 68 && item.rarity >= 4 && (item.type_id == 0 || item.type_id == 18 || item.type_id == 15))
+			{
+				minCraftItem = result;	
+				minCraftingCost = result.crafting_cost;
+			}
+
+		}	
+
+ 
+
+		WScript.Echo("Min Craft Item: " + minCraftItem.name + "(" + spidy.Name(disciplinesList,minCraftItem.discipline_id) + minCraftItem.rating + "): " + minCraftItem.crafting_cost);
+
+		function SellPrice(result)
+		{
+			var breakEvenPrice = result.crafting_cost / 0.85;
+
+			//WScript.Echo (result.max_offer_unit_price + " " + breakEvenPrice + " " + result.min_sale_unit_price);
+
+			return ((result.max_offer_unit_price) > breakEvenPrice) ? result.max_offer_unit_price : breakEvenPrice;
+		}
+
+		function CalculateProfit(rec)
+		{
+			rec.profit = 0;
+			var momentum = 0;
+			var buyListings = spidy.BuyListings(rec.result_item_data_id);
+
+			if (buyListings.length == 0) return;
+
+			var unit_price = buyListings[0].unit_price;
+			var quantity = buyListings[0].quantity;
+
+			
+			for (var j in buyListings)
+			{
+				if (unit_price == buyListings[j].unit_price || quantity == buyListings[j].quantity) continue;
+
+				if (rec.crafting_cost < (unit_price * 0.85)) 
+				{ 
+					//buyPrice = buyListings[j].unit_price; 
+					rec.profit = rec.profit + (((unit_price * 0.85) - rec.crafting_cost) * quantity);
+				}
+				else
+				{
+					break;
+				}
+
+				//WScript.Echo(unit_price + " " + buyListings[j].unit_price + " " + quantity + " " + buyListings[j].quantity);				
+
+				unit_price = buyListings[j].unit_price;
+				quantity = buyListings[j].quantity;
+			}
+
+			if (j >= buyListings.length - 1 && rec.crafting_cost < (unit_price * 0.85))
+			{
+				rec.profit = rec.profit + (((unit_price * 0.85) - rec.crafting_cost) * quantity);
+			}
+		}
+
+		function ProfitSort(first, second)
+		{
+			if (first.profit == second.profit)
+				return 0;
+			if (first.profit < second.profit)
+				return -1;
+			else
+				return 1;
+		}  
+
+		function IsBlackListed(id)
+		{
+			var i = 0;
+			//WScript.Echo(id+" "+blackList[i]+" "+blackList.length);
+			for (i = 0; id >= blackList[i] && i < blackList.length; i++)
+			{
+				//WScript.Echo(id+" "+blackList[i]);
+				if (id == blackList[i]) return true;
+			}
+			return false;
+		}    
+
+	</script>
+</job>

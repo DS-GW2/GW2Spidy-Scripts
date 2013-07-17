@@ -1,0 +1,14 @@
+<job id="SpidyExample">
+	<Script language="JScript" src="json2.js" />
+        <Script language="JScript" src="itemserrata.js" />
+	<script language="JScript">
+		//for (var i in itemsErrata[0].SoldBy)
+		//{
+		//	WScript.Echo(itemsErrata[0].SoldBy[i].NPCExternalID);
+		//	WScript.Echo(itemsErrata[0].SoldBy[i].GoldCost);
+		//};
+
+		var JSONString = JSON.stringify(itemsErrata);
+		WScript.Echo(JSONString);
+	</script>
+</job>

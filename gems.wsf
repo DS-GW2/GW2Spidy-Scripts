@@ -1,0 +1,20 @@
+<job id="SpidyExample">
+	<Script type="text/javascript" src="json2.js" />
+        <Script type="text/javascript" src="gw2spidy.js" />
+	<script type="text/javascript">
+                spidy = new GW2Spidy();
+
+		try {
+	    		var hundredGemPrice = parseInt(spidy.GemPrice().result.gold_to_gem);
+			var hundredGoldPrice = parseInt(spidy.GemPrice().result.gem_to_gold);
+		}
+		catch (e) {
+			WScript.Echo ("Error getting gold to 100-gems price, using default");
+
+		}
+
+		WScript.Echo("Gold to Gem: " + hundredGemPrice);
+		WScript.Echo("Gem to Gold: " + hundredGoldPrice);
+	    	
+	</script>
+</job>

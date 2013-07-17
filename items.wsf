@@ -1,0 +1,103 @@
+<job id="SpidyExample">
+	<script type="text/javascript">
+    		var html = new ActiveXObject("htmlfile");
+    		// 1.
+    		html.write('<html></html>');
+  
+    		var window = html.parentWindow;
+    		var navigator = window.navigator;
+    		var document = window.document;
+    		var location = document.location;
+ 
+    		// 2.
+    		window.ActiveXObject = ActiveXObject;
+ 
+    		// 3.
+    		var setTimeout = function(func, delay) { return window.setTimeout(func, delay) };
+	</script>
+	<!--script type="text/javascript" src="json2.js" /-->
+	<script type="text/javascript" src="jquery-1.9.1.js" />
+	<script type="text/javascript">
+		function PrintArray(array)
+		{
+			for (var element in array)
+			{
+				for (i in array[element])
+				{
+					WScript.Echo("  " + i + " = " + array[element][i]);
+				}
+			}
+		}
+
+		var $ = window.$;
+    		// 4.
+    		$.support.cors = true;
+		$.ajaxSetup({
+			async: false
+		});
+                var objArgs = WScript.Arguments;
+		if (objArgs.length < 1 || objArgs.length > 2)
+                {
+			Usage();
+		}
+		$.getJSON("http://localhost/items.json", function(data) {
+			$.each(data,function(i,items){
+				var str = items["Name"].replace(/\[.*\]/g, ""); // strip "s"
+				//var str = items["Name"].replace(/[\[\]]/g, ""); // with "s"
+
+				if ((objArgs.length == 1 && str.toLowerCase().indexOf(objArgs(0).toLowerCase()) != -1) || 
+					str.toLowerCase() == objArgs(0).toLowerCase())
+				//if (str.toLowerCase() == objArgs(0).toLowerCase())
+				{
+					for (i in items)
+					{
+						if (items[i].constructor == Array) 
+						{
+							WScript.Echo(i + " = [");
+							PrintArray(items[i]);
+							WScript.Echo("],");
+						}
+						else if (items[i].constructor == String)
+						{
+							WScript.Echo(i + ": \"" + items[i] + "\",");
+						}
+						else
+						{
+							WScript.Echo(i + ": " + items[i] + ",");
+						}
+					}
+				}
+			});
+ 		})
+		.error (function( jqxhr, textStatus, error ) {;
+  			var err = textStatus + ', ' + error;			
+  			WScript.Echo( "Request Failed: " + err);
+		});
+		//WScript.Echo("test");
+		//WScript.StdIn.ReadLine();
+
+    		//$.ajax({
+		//	dataType: "json",
+		//	async: false,
+      		//	url: "http://www.gw2spidy.com/api/v0.9/json/gem-price",
+      		//	success: function(data){
+        	////		html.write(data.responseText);
+ 		
+        			// 5.
+        	//		WScript.Echo("test");
+		//		$.each(data, function(key, val) {
+    		//			WScript.Echo(key);
+  		//		});
+      		//	},
+		//	error: function(x, txt, e){
+		//		WScript.Echo("ajax error: " + txt + e);
+		//	}
+    		//});
+
+		function Usage()
+		{
+			WScript.Echo ("cscript items.wsf <name>");
+                        WScript.Quit();
+		}
+	</script>
+</job>

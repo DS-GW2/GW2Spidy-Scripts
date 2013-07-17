@@ -1,0 +1,142 @@
+<job id="SpidyExample">
+	<Script type="text/javascript" src="json2.js" />
+        <Script type="text/javascript" src="gw2spidy.js" />
+	<script type="text/javascript">
+
+		var PROFITLIMIT = 5.0;
+		//var PROFITLIMIT = 8.5; // Min. profit that I need!!!
+		//var PROFITLIMIT = 20.0; // Min. profit that I need!!!
+		//var MAXPROFIT = 45.0; // Max. profit
+		var MAXPROFIT = 60.0; // Max. profit
+		var LMINPROFIT = 5.0 // Min. Actual Profit
+		var OFFERLIMIT = 10;
+		var MINSUPPLY = 10;
+        spidy = new GW2Spidy();
+
+		//var obj = spidy.ItemsOfTypes(0, 3, 5, 15, 17, 18);
+		var obj = spidy.ItemsOfTypes(0, 3, 5, 15, 17);
+		//var obj = spidy.ItemsOfTypes(15, 17);
+
+		var resultArray = new Array();
+
+		ListItems(obj, resultArray);
+
+		resultArray.sort(ProfitSort);
+
+		for (var i in resultArray)
+		{
+			CalcVol(resultArray[i]);
+			if (resultArray[i].buyVol > 0 && resultArray[i].sellVol > 0)
+			{
+			    resultArray[i].monthAvgSell = spidy.monthlySellAverage(resultArray[i].data_id);
+				if ((resultArray[i].min_sale_unit_price - 1) <= resultArray[i].monthAvgSell && (resultArray[i].max_offer_unit_price + 1) <= spidy.monthlyOfferAverage(resultArray[i].data_id))
+				{
+				WScript.Echo(resultArray[i].data_id + ": " + resultArray[i].name + resultArray[i].level + ": " + (resultArray[i].max_offer_unit_price + 1) + " " + 
+				(resultArray[i].min_sale_unit_price - 1) + " " + resultArray[i].monthAvgSell + " " + resultArray[i].profit + " " + resultArray[i].pprofit + " " + 
+				resultArray[i].buyVol + " " + resultArray[i].sellVol);
+				}
+			}
+		} 
+
+		function CalcVol(rec)
+		{
+			rec.buyVol = GetVol(spidy.BuyListings(rec.data_id));
+			if (rec.buyVol > 0)
+			{
+				rec.sellVol = GetVol(spidy.SellListings(rec.data_id));
+			}
+		}
+
+		function GetVol(listing)
+		{
+			if (listing.length == 0) { WScript.Echo("length zero"); return 0; }
+
+			var today = GetDate(listing[0].listing_datetime);
+			//WScript.Echo("today: "+today);
+			var totalQuantity = 0;
+			var prevQuantity = listing[0].quantity;
+
+			for (var j in listing)
+			{
+				if (today != GetDate(listing[j].listing_datetime)) break;
+				//WScript.Echo("totalQuantity: " + totalQuantity);
+				totalQuantity = totalQuantity + (prevQuantity - listing[j].quantity);
+				prevQuantity = listing[j].quantity;
+			}
+			return totalQuantity;
+
+		}
+
+		function GetDate(str)
+		{
+			return str.split(" ")[0];
+		}
+
+		function ListItems(obj, resultArray)
+		{
+			for (var i in obj) {
+				var result = obj[i];	
+
+				/*if ((result.offer_price_change_last_hour >= 0 && result.sale_price_change_last_hour <= 0) || 
+				    (result.offer_price_change_last_hour < 0 && result.sale_price_change_last_hour < 0))
+					continue; */
+
+				if (result.offer_price_change_last_hour != 0 || result.sale_price_change_last_hour != 0)
+					continue;			
+				
+
+				//if (result.offer_price_change_last_hour >=  result.sale_price_change_last_hour) continue;
+
+				if (result.sale_availability <= MINSUPPLY || result.offer_availability < (1.5 * result.sale_availability)) continue;
+
+				//if (result.max_offer_unit_price < OFFERLIMIT) continue;
+				var lprofit = ((result.min_sale_unit_price - 1) * 0.85) - (result.max_offer_unit_price + 1);
+
+				var profit = lprofit * 100.0 / (result.max_offer_unit_price + 1);
+				
+//|| profit > MAXPROFIT
+                                if (lprofit < LMINPROFIT || profit < PROFITLIMIT || profit > MAXPROFIT) continue;
+			
+
+				//if (profit <= 0) continue;
+
+				var resultTemp = {
+					data_id:  result.data_id,
+					name: result.name,
+					min_sale_unit_price: result.min_sale_unit_price,
+					rarity: result.rarity,
+					level: result.restriction_level,
+					max_offer_unit_price: result.max_offer_unit_price,
+					offer_price_change_last_hour: result.offer_price_change_last_hour,
+					sale_price_change_last_hour: result.sale_price_change_last_hour,
+					momentum: 0,
+					profit: lprofit,
+					pprofit: profit,
+					buyPrice: 0,
+					buyVol: 0,
+					sellVol: 0,
+					monthAvgSell: 0,
+					monthAvgOffer: 0
+				};
+
+				resultArray.push(resultTemp);				
+
+				//WScript.Echo(result.data_id + ": " + result.name + ": " + result.max_offer_unit_price + " " + result.min_sale_unit_price + " " + result.offer_price_change_last_hour + " " + result.sale_price_change_last_hour);
+												
+			}
+		}
+
+
+		function ProfitSort(first, second)
+		{
+			if (first.pprofit == second.pprofit)
+				return 0;
+			if (first.pprofit > second.pprofit)
+				return -1;
+			else
+				return 1;
+		}
+
+
+	</script>
+</job>

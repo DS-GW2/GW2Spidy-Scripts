@@ -1,0 +1,110 @@
+<job id="SpidyExample">
+	<Script language="JScript" src="json2.js" />
+        <Script language="JScript" src="gw2spidy.js" />
+	<script language="JScript">
+		var spidy = new GW2Spidy();
+
+		var objArgs = WScript.Arguments;
+		if (objArgs.length != 1)
+                {
+                	WScript.Echo ("cscript getitem.wsf <name>");
+                        WScript.Quit();
+                }
+
+
+		var hundredGemPrice = parseInt(spidy.GemPrice().result.gold_to_gem);
+		var BLSalvageCost = hundredGemPrice * 3 / 25;
+		WScript.Echo ("BL Salvage Cost: " + BLSalvageCost);
+
+		var items = spidy.SearchItems(objArgs(0));
+
+		for (var i in items)
+		{
+			WScript.Echo("");
+			if (items[i].type_id == 0 || items[i].type_id == 18)
+			{
+				WScript.Echo ("With Black Lion Salvage Kit...");
+				SalvageOrTP(items[i], BLSalvageCost, 1.0);
+				WScript.Echo ("With Master Salvage Kit...");
+				SalvageOrTP(items[i], 61.44, 0.8);
+			}
+			var margin = parseInt(items[i].min_sale_unit_price) - parseInt(items[i].max_offer_unit_price);
+			WScript.Echo(items[i].data_id + ": \"" + items[i].name + "\" TP Sale Profit: " + parseInt(items[i].max_offer_unit_price) * 0.85 + " Margin: " + margin);
+			WScript.Echo("Rarity: " + items[i].rarity);
+			WScript.Echo("level: " + items[i].restriction_level);
+			WScript.Echo("Type Id: " + items[i].type_id);
+			WScript.Echo("SubType Id: " + items[i].sub_type_id);
+			WScript.Echo("Price Last Changed: " + items[i].price_last_changed);
+			WScript.Echo("Max Offer Unit Price: " + items[i].max_offer_unit_price);
+			WScript.Echo("Min Sale Unit Price: " + items[i].min_sale_unit_price);
+			WScript.Echo("Offer Availability: " + items[i].offer_availability);
+			WScript.Echo("Sale Availability: " + items[i].sale_availability);
+			WScript.Echo("% Offer Price Change Last Hour: " + items[i].offer_price_change_last_hour);
+			WScript.Echo("% Sale Price Change Last Hour: " + items[i].sale_price_change_last_hour);
+			WScript.Echo("Average Monthly Offer Price: " + spidy.monthlyOfferAverage(items[i].data_id));
+			WScript.Echo("Average Monthly Sell Price: " + spidy.monthlySellAverage(items[i].data_id));			
+		}
+
+		function SalvageOrTP(item, salvageCost, chanceToGetUpgrade)
+		{
+			if (item.type_id != 0 && item.type_id != 18) return;
+
+			if (parseInt(item.rarity) >= 3)
+			{
+				var price = parseInt(item.max_offer_unit_price) * 0.85;
+
+				var name = item.name;
+
+				var start = name.indexOf("of");
+
+				if (start >= 0)
+				{				
+					var upgradeName = name.substring(start);
+
+					upgradeName = (parseInt(item.type_id) == 0) ? "Rune " + upgradeName : "Sigil " + upgradeName;
+
+					if (parseInt(item.rarity) == 3) upgradeName = "Minor " + upgradeName;
+					else if (parseInt(item.rarity) == 4) upgradeName = "Major " + upgradeName;
+					else 
+					{
+						upgradeName = "Superior " + upgradeName;
+
+						if (parseInt(item.restriction_level) >= 68)
+						{
+							var obj = spidy.ItemData(19721);
+							var ectoPrice = parseInt(obj.min_sale_unit_price);
+							WScript.Echo ("Ecto price: " + ectoPrice);
+							price = price - ectoPrice;
+						}
+					}
+
+					WScript.Echo ("Upgrade: " + upgradeName);
+
+
+					var upgrade = spidy.SearchItems(upgradeName);
+
+					if (upgrade.length == 0) return;
+
+					//for (var i in upgrade)
+					//{
+					var runePrice = parseInt(upgrade[0].max_offer_unit_price) * 0.85 * chanceToGetUpgrade;
+					//}
+
+					
+					if (runePrice >= (price + salvageCost))
+					{
+						WScript.Echo ("Salvage!  Rune Price Profit: " + (runePrice - salvageCost) + " TP Sale Profit: " + parseInt(item.max_offer_unit_price) * 0.85);
+					}
+					else
+					{
+						WScript.Echo ("Sell. TP Sale Profit: " + parseInt(item.max_offer_unit_price) * 0.85 + " Rune Price profit: " + (runePrice - salvageCost));
+					}	
+					return;				
+								
+				}
+			}
+			WScript.Echo ("Sell.  TP Sale Profit: " + parseInt(item.max_offer_unit_price) * 0.85);
+		}		
+
+	</script>
+</job>

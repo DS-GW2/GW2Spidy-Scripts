@@ -1,0 +1,150 @@
+<job id="SpidyExample">
+	<Script type="text/javascript" src="json2.js" />
+        <Script type="text/javascript" src="gw2spidy.js" />
+	<script type="text/javascript">
+                spidy = new GW2Spidy();
+
+		//var obj5 = spidy.ItemsOfType(17); // Upgrade Components
+
+		//var obj = spidy.ItemsOfType(18); //weapons
+		//var obj1 = spidy.ItemsOfType(0); //armor
+
+		//var obj4 = spidy.ItemsOfType(5); // Crafting materials
+
+		//var obj3 = spidy.ItemsOfType(3); // Consumables
+
+		//var obj2 = spidy.ItemsOfType(15); // Trinkets
+
+		//obj = obj.concat(obj1);
+		//obj = obj.concat(obj2);
+		//obj = obj.concat(obj3);
+		//obj = obj.concat(obj4);
+		//obj = obj.concat(obj5);
+
+		var obj = spidy.ItemsOfTypes(0, 3, 5, 15, 17, 18);
+
+		var resultArray = new Array();
+
+		ListItems(obj, resultArray);
+
+		for (var i in resultArray)
+		{
+			SellMomentum(resultArray[i]);
+		}
+
+		resultArray.sort(ProfitSort);
+
+		for (var i in resultArray)
+		{
+			WScript.Echo(resultArray[i].data_id + ": " + resultArray[i].name + resultArray[i].level + ": " + resultArray[i].profit + " " + resultArray[i].sellPrice + " " + resultArray[i].max_offer_unit_price + " " + resultArray[i].min_sale_unit_price + " " + resultArray[i].offer_price_change_last_hour + " " + resultArray[i].sale_price_change_last_hour + " " + resultArray[i].momentum);		
+		} 
+
+		/*var result = spidy.ItemData(36740);
+		var resultTemp = {
+			data_id:  result.data_id,
+			name: result.name,
+			min_sale_unit_price: result.min_sale_unit_price,
+			rarity: result.rarity,
+			level: result.restriction_level,
+			max_offer_unit_price: result.max_offer_unit_price,
+			offer_price_change_last_hour: result.offer_price_change_last_hour,
+			sale_price_change_last_hour: result.sale_price_change_last_hour,
+			momentum: 0,
+			profit: 0
+		};
+		SellMomentum(resultTemp);*/
+
+		function SellMomentum(rec)
+		{
+			var momentum = 0;
+			var sellListings = spidy.SellListings(rec.data_id);
+
+			if (sellListings.length == 0) return 0;
+
+			var unit_price = sellListings[0].unit_price;
+			var quantity = sellListings[0].quantity;
+			var cost = 0;
+			var totalQuantity = 0;
+			var sellPrice = unit_price;
+			for (var j in sellListings)
+			{
+				if (unit_price == sellListings[j].unit_price || quantity == sellListings[j].quantity) continue;
+
+				if (unit_price > sellListings[j].unit_price) 
+				{ 
+					sellPrice = unit_price; 
+					break; 
+				}
+
+				//WScript.Echo(unit_price + " " + sellListings[j].unit_price + " " + quantity + " " + sellListings[j].quantity);
+				
+				var sellpercent = (sellListings[j].unit_price - unit_price) / sellListings[j].unit_price;
+				var quantitypercent = Math.abs(quantity - sellListings[j].quantity) / sellListings[j].quantity;
+				
+				momentum = momentum + (sellpercent / quantitypercent);
+				totalQuantity = totalQuantity + quantity - sellListings[j].quantity;
+				cost = cost + (unit_price * (quantity - sellListings[j].quantity));
+				unit_price = sellListings[j].unit_price;
+				quantity = sellListings[j].quantity;
+			}
+
+			//WScript.Echo (sellPrice + " " + totalQuantity + " " + cost);
+			rec.momentum = momentum;
+			rec.sellPrice = sellPrice - 1;
+			//rec.profit = ((((sellPrice - 1) * totalQuantity * 0.85) - cost) * 100.0) / cost;
+			rec.profit = ((sellPrice - 1) * totalQuantity * 0.85) - cost;
+		}
+
+		function ListItems(obj, resultArray)
+		{
+			for (var i in obj) {
+				var result = obj[i];	
+
+				if (result.sale_price_change_last_hour >= -50 || result.offer_price_change_last_hour < 0) continue;
+
+				if (result.sale_availability <= 0 || result.offer_availability < 1.5 * result.sale_availability) continue;				
+				
+				var resultTemp = {
+					data_id:  result.data_id,
+					name: result.name,
+					min_sale_unit_price: result.min_sale_unit_price,
+					rarity: result.rarity,
+					level: result.restriction_level,
+					max_offer_unit_price: result.max_offer_unit_price,
+					offer_price_change_last_hour: result.offer_price_change_last_hour,
+					sale_price_change_last_hour: result.sale_price_change_last_hour,
+					sellPrice: 0,
+					momentum: 0,
+					profit: 0
+				};
+
+				resultArray.push(resultTemp);				
+
+				//WScript.Echo(result.data_id + ": " + result.name + ": " + result.max_offer_unit_price + " " + result.min_sale_unit_price + " " + result.offer_price_change_last_hour + " " + result.sale_price_change_last_hour);
+												
+			}
+		}
+
+		function MomentumSort(first, second)
+		{
+			if (first.momentum == second.momentum)
+				return 0;
+			if (first.momentum < second.momentum)
+				return -1;
+			else
+				return 1;
+		}
+
+		function ProfitSort(first, second)
+		{
+			if (first.profit == second.profit)
+				return 0;
+			if (first.profit < second.profit)
+				return -1;
+			else
+				return 1;
+		}
+
+
+	</script>
+</job>

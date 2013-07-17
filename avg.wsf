@@ -1,0 +1,92 @@
+<job id="SpidyExample">
+	<Script type="text/javascript" src="json2.js" />
+        <Script type="text/javascript" src="gw2spidy.js" />
+	<script type="text/javascript">
+        spidy = new GW2Spidy();
+
+		WScript.Echo(monthlyOfferAverage(12135));
+		WScript.Echo(monthlySellAverage(12135));
+
+		function getDateTime(str)
+		{
+			var dateTime = str.split(" ");
+			var date = dateTime[0];
+			var time = dateTime[1];
+
+			var dateBits = date.split("-");
+			var timeBits = time.split(":");
+
+			return new Date(dateBits[0], dateBits[1], dateBits[2], timeBits[0], timeBits[1], timeBits[2]);
+		}
+
+		function monthlyAverage(listing, stopDate)
+		{
+			if (listing.length == 0) { WScript.Echo("length zero"); return 0; }
+
+			var count = 0;
+			var cost = 0;
+			for (var i in listing)
+			{
+				if (getDateTime(listing[i].listing_datetime) <= stopDate) break;
+				cost += listing[i].unit_price;
+				count++;
+			}
+			return cost / count;
+		}
+		
+		function monthlyOfferAverage(id)
+		{
+			var listing = spidy.BuyListings(id, 1);
+			
+			if (listing.length == 0) { WScript.Echo("length zero"); return 0; }
+						
+			var startDate = getDateTime(listing[0].listing_datetime);
+			var previousMonth = new Date(startDate);
+			previousMonth.setMonth(startDate.getMonth() - 1);
+			
+			var currentPage = 1;
+			var count = 0;
+			var average = 0;
+			while (true)
+			{
+				average += monthlyAverage(listing, previousMonth);
+				count++;
+				
+				currentPage++;				
+				listing = spidy.BuyListings(id, currentPage);
+				if (listing.length == 0 || getDateTime(listing[0].listing_datetime) <= previousMonth) break;				
+				//WScript.Echo(average + " " + count);
+			}	
+			
+			return Math.round(average / count);
+		}
+		
+		function monthlySellAverage(id)
+		{
+			var listing = spidy.SellListings(id, 1);
+			
+			if (listing.length == 0) { WScript.Echo("length zero"); return 0; }
+						
+			var startDate = getDateTime(listing[0].listing_datetime);
+			var previousMonth = new Date(startDate);
+			previousMonth.setMonth(startDate.getMonth() - 1);
+			
+			var currentPage = 1;
+			var count = 0;
+			var average = 0;
+			while (true)
+			{
+				average += monthlyAverage(listing, previousMonth);
+				count++;
+				
+				currentPage++;				
+				listing = spidy.SellListings(id, currentPage);
+				if (listing.length == 0 || getDateTime(listing[0].listing_datetime) <= previousMonth) break;				
+				//WScript.Echo(average + " " + count);
+			}	
+
+			return Math.round(average / count);
+		}
+
+	</script>
+</job>

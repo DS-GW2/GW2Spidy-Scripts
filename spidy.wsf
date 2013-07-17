@@ -1,0 +1,47 @@
+<job id="SpidyExample">
+	<Script language="JScript" src="json2.js" />
+        <Script language="JScript" src="gw2spidy.js" />
+	<script language="JScript">
+                spidy = new GW2Spidy();
+		var json = '{"result":true,"count":1}'
+                //spidy.ShowData();
+		var obj;
+ 
+		/*obj = spidy.SellListings(19697);
+
+                for (var i in obj) {
+                	var result = obj[i];
+
+			WScript.Echo(result.quantity + ": " + result.unit_price);
+		}*/
+                
+
+		WScript.Echo("Gem-to-Gold: " + spidy.GemPrice().result.gem_to_gold);
+
+		/*obj = spidy.ItemsOfType(6);
+
+                for (var i in obj) {
+                	var result = obj[i];
+
+			WScript.Echo(result.data_id + ": " + result.name);
+		}*/
+
+		var obj1 = spidy.ItemData(24732);
+		var obj2 = spidy.ItemData(19721);
+		var limit = parseInt(obj1.max_offer_unit_price) + parseInt(obj2.max_offer_unit_price);
+
+		WScript.Echo(limit);
+
+		obj = spidy.SearchItems("divinity");
+                for (var i in obj) {
+                	var result = obj[i];
+			var price = parseInt(result.min_sale_unit_price);
+			
+			if (price < limit && parseInt(result.rarity) >= obj1.rarity)
+			{
+				WScript.Echo(result.data_id + ": " + result.name + " " + price);
+			}
+		}
+
+	</script>
+</job>

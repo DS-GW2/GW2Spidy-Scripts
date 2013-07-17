@@ -1,0 +1,60 @@
+<job id="SpidyExample">
+	<Script language="JScript" src="json2.js" />
+        <Script language="JScript" src="gw2spidy.js" />
+	<Script language="JScript" src="mysticweapons.js" />
+	<script language="JScript">
+                var spidy = new GW2Spidy();
+		
+		for (var i = 0; i < mysticWeapons.length; i++)
+		{
+			var item = spidy.ItemData(mysticWeapons[i].item_id);
+			var mat1 = spidy.ItemData(mysticWeapons[i].mat1.item_id);
+			var mat2 = spidy.ItemData(mysticWeapons[i].mat2.item_id);
+
+			var mat3Cost;
+			if (mysticWeapons[i].mat3.item_id > 0)
+			{
+				var mat3 = spidy.ItemData(mysticWeapons[i].mat3.item_id);
+				mat3Cost = mysticWeapons[i].mat3.count * parseInt(mat3.min_sale_unit_price);
+			}
+			else
+			{
+				mat3Cost = mysticWeapons[i].mat3.count;
+			}
+
+			craftingCost = mysticWeapons[i].mat1.count * parseInt(mat1.min_sale_unit_price) + 
+				       mysticWeapons[i].mat2.count * parseInt(mat2.min_sale_unit_price) + 
+				       mat3Cost;
+
+			if (mysticWeapons[i].mat4.count > 0)
+			{
+				var mat4 = spidy.ItemData(mysticWeapons[i].mat4.item_id);
+				craftingCost = craftingCost + (mysticWeapons[i].mat4.count * parseInt(mat4.min_sale_unit_price));
+			}
+
+			saleCost = parseInt(item.max_offer_unit_price) * 0.85;
+			mysticWeapons[i].craftCost = craftingCost;
+			mysticWeapons[i].profit = saleCost - craftingCost;
+			mysticWeapons[i].tpSalePrice = parseInt(item.max_offer_unit_price);
+			//WScript.Echo (item.name + " crafting cost: " + craftingCost + " Sale(TP): " + saleCost + " Crafting Profit: " + mysticWeapons[i].profit);
+		}
+
+		var finalResults = mysticWeapons.sort(ResultSort);
+
+		for (var i in finalResults)
+		{
+			WScript.Echo(finalResults[i].item_id + ": " + finalResults[i].name + " Crafting Cost: " + finalResults[i].craftCost + " Crafting Profit: " + finalResults[i].profit);
+		}
+
+		function ResultSort(first, second)
+		{
+			if (first.profit == second.profit)
+				return 0;
+			if (first.profit < second.profit)
+				return -1;
+			else
+				return 1;
+		}
+
+	</script>
+</job>

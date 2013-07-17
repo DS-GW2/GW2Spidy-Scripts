@@ -1,0 +1,23 @@
+<job>
+  <script language="JScript">
+    var html = new ActiveXObject("htmlfile");
+    // 1.
+    html.write('<html></html>');
+  
+    var window = html.parentWindow;
+    var navigator = window.navigator;
+    var document = window.document;
+    var location = document.location;
+ 
+    // 2.
+    window.ActiveXObject = ActiveXObject;
+ 
+    // 3.
+    var setTimeout = function(func, delay) { return window.setTimeout(func, delay) };
+  </script>
+  <script type="text/javascript" src="json2.js" />
+  <script src="jquery-2.0.0.js" />
+  <script language="JScript">
+
+  </script>
+</job>

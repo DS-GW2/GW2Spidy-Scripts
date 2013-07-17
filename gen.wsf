@@ -1,0 +1,276 @@
+<job id="SpidyExample">
+	<Script language="JScript" src="json2.js" />
+        <Script language="JScript" src="craftmats1.js" />
+	<Script language="JScript" src="mysticweapons1.js" />
+	<script language="JScript">
+		var result = new Array();
+		function ProcessCommonCraftMats(commonMat, idCount)
+		{
+			for (var i = 0; i < commonMat.length - 1; i++)
+			{
+				var record = {
+					ID: 0,
+					ExternalID: 0,
+					DataID: idCount,
+					Name: commonMat[i+1].name,
+					Rating: 0,
+					Type: 9,
+					Count: 15, // average?
+					CreatedItemId: commonMat[i+1].item_id,
+					CreatedDataId: commonMat[i+1].item_id,
+					RequiresRecipeItem: false,
+					Ingredients: new Array()
+				};
+				var ingredientRecord = {
+					ItemID: commonMat[i].item_id,
+					Count: 250
+				};
+				record.Ingredients.push(ingredientRecord);
+
+				var ingredientRecord2 = {
+					ItemID: commonMat[i+1].item_id,
+					Count: 1
+				};
+				record.Ingredients.push(ingredientRecord2);
+
+
+				var ingredientRecord3 = {
+					ItemID: fineDust[i+1].item_id,
+					Count: 5
+				};
+				record.Ingredients.push(ingredientRecord3);
+
+				var ingredientRecord4 = {
+					ItemID: 20796,
+					Count: i+1
+				};
+				record.Ingredients.push(ingredientRecord4);
+
+				result.push(record);
+				idCount++;
+			}
+			return idCount;
+		}
+
+		function ProcessFineCraftMats(mat, idCount)
+		{
+			for (var i = 0; i < mat.length - 1; i++)
+			{
+				var record = {
+					ID: 0,
+					ExternalID: 0,
+					DataID: idCount,
+					Name: mat[i+1].name,
+					Rating: 0,
+					Type: 9,
+					Count: 9, // average?
+					CreatedItemId: mat[i+1].item_id,
+					CreatedDataId: mat[i+1].item_id,
+					RequiresRecipeItem: false,
+					Ingredients: new Array()
+				};
+				var ingredientRecord = {
+					ItemID: mat[i].item_id,
+					Count: 50
+				};
+				record.Ingredients.push(ingredientRecord);
+
+				var ingredientRecord2 = {
+					ItemID: mat[i+1].item_id,
+					Count: 1
+				};
+				record.Ingredients.push(ingredientRecord2);
+
+				var ingredientRecord3 = {
+					ItemID: fineDust[i+1].item_id,
+					Count: 5
+				};
+				record.Ingredients.push(ingredientRecord3);
+
+				var ingredientRecord4 = {
+					ItemID: 20796,
+					Count: i+1
+				};
+				record.Ingredients.push(ingredientRecord4);
+
+				result.push(record);
+				idCount++;
+			}
+			return idCount;
+		}
+
+
+		function ProcessDust(mat, idCount)
+		{
+			for (var i = 0; i < mat.length - 1; i++)
+			{
+				var record = {
+					ID: 0,
+					ExternalID: 0,
+					DataID: idCount,
+					Name: mat[i+1].name,
+					Rating: 0,
+					Type: 9,
+					Count: 21, // average?
+					CreatedItemId: mat[i+1].item_id,
+					CreatedDataId: mat[i+1].item_id,
+					RequiresRecipeItem: false,
+					Ingredients: new Array()
+				};
+				var ingredientRecord = {
+					ItemID: mat[i].item_id,
+					Count: 250
+				};
+				record.Ingredients.push(ingredientRecord);
+
+				var ingredientRecord2 = {
+					ItemID: mat[i+1].item_id,
+					Count: 1
+				};
+				record.Ingredients.push(ingredientRecord2);
+
+				var ingredientRecord3 = {
+					ItemID: 20799,   // Crystal
+					Count: i+1
+				};
+				record.Ingredients.push(ingredientRecord3);
+
+				var ingredientRecord4 = {
+					ItemID: 20796,   // Philosopher's stone
+					Count: i+1
+				};
+				record.Ingredients.push(ingredientRecord4);
+
+				result.push(record);
+				idCount++;
+			}
+			return idCount;
+		}
+
+		function ProcessRareCraftMats(mat, idCount)
+		{
+			for (var i = 0; i < mat.length - 1; i++)
+			{
+				var record = {
+					ID: 0,
+					ExternalID: 0,
+					DataID: idCount,
+					Name: mat[i+1].name,
+					Rating: 0,
+					Type: 9,
+					Count: 1,
+					CreatedItemId: mat[i+1].item_id,
+					CreatedDataId: mat[i+1].item_id,
+					RequiresRecipeItem: false,
+					Ingredients: new Array()
+				};
+				var ingredientRecord = {
+					ItemID: mat[i].item_id,
+					Count: 2
+				};
+				record.Ingredients.push(ingredientRecord);
+
+				var ingredientRecord2 = {
+					ItemID: 19663,  // Bottle of Elonian Wine
+					Count: 1
+				};
+				record.Ingredients.push(ingredientRecord2);
+
+				var ingredientRecord3 = {
+					ItemID: fineDust[i+2].item_id,
+					Count: 1
+				};
+				record.Ingredients.push(ingredientRecord3);
+
+				var ingredientRecord4 = {
+					ItemID: 20799,  // Crystal
+					Count: 1
+				};
+				record.Ingredients.push(ingredientRecord4);
+
+				result.push(record);
+				idCount++;
+			}
+			return idCount;
+		}
+
+		var idCount = 10000;
+		for (var i = 0; i < mysticWeapons.length; i++)
+		{
+			var record = {
+				ID: 0,
+				ExternalID: 0,
+				DataID: idCount,
+				Name: mysticWeapons[i].name,
+				Rating: 0,
+				Type: 9,
+				Count: 1,
+				CreatedItemId: mysticWeapons[i].item_id,
+				CreatedDataId: mysticWeapons[i].item_id,
+				RequiresRecipeItem: false,
+				Ingredients: new Array()
+			};
+			var ingredientRecord = {
+				ItemID: mysticWeapons[i].mat1.item_id,
+				Count: mysticWeapons[i].mat1.count
+			};
+			record.Ingredients.push(ingredientRecord);
+
+			var ingredientRecord2 = {
+				ItemID: mysticWeapons[i].mat2.item_id,
+				Count: mysticWeapons[i].mat2.count
+			};
+			record.Ingredients.push(ingredientRecord2);
+
+			if (mysticWeapons[i].mat3.item_id > 0)
+			{
+				var ingredientRecord3 = {
+					ItemID: mysticWeapons[i].mat3.item_id,
+					Count: mysticWeapons[i].mat3.count
+				};
+				record.Ingredients.push(ingredientRecord3);
+			}
+
+
+			if (mysticWeapons[i].mat4.count > 0)
+			{
+				var ingredientRecord4 = {
+					ItemID: mysticWeapons[i].mat4.item_id,
+					Count: mysticWeapons[i].mat4.count
+				};
+				record.Ingredients.push(ingredientRecord4);
+			}
+			result.push(record);
+			idCount++;			
+		};
+
+		idCount = ProcessCommonCraftMats(commonCloth, idCount);
+		idCount = ProcessCommonCraftMats(commonLeather, idCount);
+		idCount = ProcessCommonCraftMats(commonLog, idCount);
+		idCount = ProcessCommonCraftMats(commonOre1, idCount);
+		idCount = ProcessCommonCraftMats(commonOre, idCount);
+
+		idCount = ProcessFineCraftMats(fineBones, idCount);
+		idCount = ProcessFineCraftMats(fineClaws, idCount);
+		idCount = ProcessFineCraftMats(fineFangs, idCount);
+		idCount = ProcessFineCraftMats(fineScales, idCount);
+		idCount = ProcessFineCraftMats(fineTotems, idCount);
+		idCount = ProcessFineCraftMats(fineVenomSacs, idCount);
+		idCount = ProcessFineCraftMats(fineVialsOfBlood, idCount);
+
+		idCount = ProcessDust(fineDust, idCount);
+
+		idCount = ProcessRareCraftMats(rareEssence, idCount);
+		idCount = ProcessRareCraftMats(rareOnyx, idCount);
+		idCount = ProcessRareCraftMats(rareMolten, idCount);
+		idCount = ProcessRareCraftMats(rareGlacial, idCount);
+		idCount = ProcessRareCraftMats(rareDestroyer, idCount);
+		idCount = ProcessRareCraftMats(rareCrystal, idCount);
+		idCount = ProcessRareCraftMats(rareCorrupted, idCount);
+		idCount = ProcessRareCraftMats(rareCharged, idCount);
+
+		var JSONString = JSON.stringify(result);
+		WScript.Echo(JSONString);
+
+	</script>
+</job>

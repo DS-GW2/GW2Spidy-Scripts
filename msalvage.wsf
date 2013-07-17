@@ -1,0 +1,19 @@
+<job id="SpidyExample">
+	<Script type="text/javascript" src="json2.js" />
+        <Script type="text/javascript" src="gw2spidy.js" />
+	<script type="text/javascript">
+                spidy = new GW2Spidy();
+
+	    	var hundredGemPrice = parseInt(spidy.GemPrice().result.gold_to_gem);
+
+		// We first find the cost of 30 Mystic stones using the cheaper 450gems/10 formula, then divide by 10 to get the cost of 3 Mystic stones
+		var MStonesCost = (1350 * hundredGemPrice / 100) / 10
+		//var MStonesCost = (1080 * hundredGemPrice / 100) / 10
+		var cost = 2624 + MStonesCost;
+
+		WScript.Echo("Cost of 1 Mystic Salvage kit: " + cost);
+		WScript.Echo("1 Mystic Salvage kit Salvage costs: " + (cost / 250));
+		WScript.Echo("1 Master Salvage kit Salvage costs: 61.04");
+
+	</script>
+</job>

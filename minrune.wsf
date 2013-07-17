@@ -1,0 +1,25 @@
+<job id="SpidyExample">
+	<Script type="text/javascript" src="json2.js" />
+        <Script type="text/javascript" src="gw2spidy.js" />
+	<script type="text/javascript">
+                spidy = new GW2Spidy();
+
+		var resultArray = new Array();
+		var obj = spidy.ItemsOfType(17);
+		var minItem;
+		var minCost = 9007199254740992; // maxint?
+
+		for (var i in obj) {
+			var result = obj[i];
+			if (result.sub_type_id != 2) continue;	
+
+			if (result.rarity != 4 || result.min_sale_unit_price >= minCost) continue;
+
+			minItem = result;	
+			minCost = result.crafting_cost;
+		}	
+
+		WScript.Echo("Min Cost Rune: " + minItem.name + ": " + minItem.min_sale_unit_price);
+
+	</script>
+</job>

@@ -1,0 +1,337 @@
+<job id="SpidyExample">
+	<Script type="text/javascript" src="json2.js" />
+        <Script type="text/javascript" src="gw2spidy.js" />
+	<script type="text/javascript">
+                spidy = new GW2Spidy();
+
+		var obj = spidy.ItemData(19721);
+		var ectoPrice = parseInt(obj.min_sale_unit_price);
+		WScript.Echo ("Ecto price: " + ectoPrice);
+
+		try {
+	    		var hundredGemPrice = parseInt(spidy.GemPrice().result.gold_to_gem);
+		}
+		catch (e) {
+			WScript.Echo ("Error getting gold to 100-gems price, using default");
+			var hundredGemPrice = 18838;
+		}
+	    	var BLSalvageCost = hundredGemPrice * 3 / 25;
+
+	    WScript.Echo ("BL Salvage Cost: " + BLSalvageCost);
+
+		var armorsArray = spidy.ItemsOfType(0);
+		var weaponsArray = spidy.ItemsOfType(18);
+
+		var resultArray = new Array();
+		
+                //ListViableRuneSigilItems("of the Air", spidy.ItemData(24750), ectoPrice, armorsArray, resultArray);
+
+		//ListViableRuneSigilItems("of Accuracy", spidy.ItemData(24618), ectoPrice, weaponsArray, resultArray);
+
+		//ListViableRuneSigilItems("of Fire", spidy.ItemData(24548), ectoPrice, weaponsArray, resultArray);
+
+		//ListViableRuneSigilItems("of Perception", spidy.ItemData(24580), ectoPrice, weaponsArray, resultArray);
+
+		/*ListViableRuneSigilItems("of Earth", spidy.ItemData(24560), ectoPrice, weaponsArray, resultArray);
+
+		ListViableRuneSigilItems("of Accuracy", spidy.ItemData(24618), ectoPrice, weaponsArray, resultArray);
+
+		ListViableRuneSigilItems("of Blood", spidy.ItemData(24570), ectoPrice, weaponsArray, resultArray);*/
+		
+		IterateRunesSigils(armorsArray, weaponsArray, ectoPrice, resultArray);
+
+		var finalResults = resultArray.sort(ResultSort);
+
+		for (var i in finalResults)
+		{
+			if (finalResults[i].level >= 68)
+			WScript.Echo(">>>" + finalResults[i].data_id + ": " + finalResults[i].name + " " + finalResults[i].profit + " " + finalResults[i].offer_price_change + " " + finalResults[i].rarity + " " + finalResults[i].level + " " + finalResults[i].min_sale_unit_price + " " + finalResults[i].limit);
+			else
+			WScript.Echo(finalResults[i].data_id + ": " + finalResults[i].name + " " + finalResults[i].profit + " " + finalResults[i].offer_price_change + " " + finalResults[i].rarity + " " + finalResults[i].level + " " + finalResults[i].min_sale_unit_price + " " + finalResults[i].limit);
+		}
+
+		function ListViableRuneSigilItems(suffix, runeItem, ectoPrice, itemList, resultArray)
+		{
+
+			var obj1 = runeItem;
+
+			//limit = (parseInt(obj1.rarity) >= 5) ? limit - BLSalvageCost : limit - 61.44;
+
+			//itemList = spidy.SearchItems(suffix);
+			//itemList = spidy.ItemsOfType(typeId);
+
+            		for (var i in itemList) {
+
+                		var result = itemList[i];
+				//if (parseInt(result.sale_availability) <= 0 || parseInt(result.rarity) != parseInt(obj1.rarity)) continue;
+
+				if (!match(suffix, obj1.data_id, result.name)) continue;
+
+				var limit = (obj1.min_sale_unit_price) * 0.85;
+
+				limit = limit - BLSalvageCost;
+
+				var salePrice = parseInt(result.min_sale_unit_price);
+				var tpOfferPrice = parseInt(result.max_offer_unit_price) + 5;
+				//var offerPrice = (tpOfferPrice + salePrice) / 2.0;
+				var offerPrice = tpOfferPrice;
+
+				/*if (parseInt(result.rarity) >= 5 && parseInt(result.restriction_level) >= 68)
+				{
+					//salePrice = salePrice  - ectoPrice;
+					limit = limit + ectoPrice;
+					//tpOfferPrice = tpOfferPrice - ectoPrice;
+				}*/
+
+				//var profit = (limit - offerPrice) * 100.0 / offerPrice;
+				var profit = limit - offerPrice;
+
+				if (profit > 0 && parseInt(result.rarity) >= 5) // && parseInt(result.restriction_level) >= 68)
+				{
+
+					var resultTemp = {
+						data_id:  result.data_id,
+						name: result.name,
+						min_sale_unit_price: parseInt(result.min_sale_unit_price),
+						rarity: result.rarity,
+						level: result.restriction_level,
+						offer_price_change: obj1.offer_price_change_last_hour,
+						offer: offerPrice,
+						limit: limit,
+						profit: profit
+					};
+
+					//WScript.Echo(resultTemp.data_id + ": " + resultTemp.name + " Sale Price: " + resultTemp.min_sale_unit_price + " Profit: " + resultTemp.profit);
+					resultArray.push(resultTemp);
+				}
+			}
+		}
+
+		function IterateRunesSigils(armorsArray, weaponsArray, ectoPrice, resultArray)
+		{
+			var obj = spidy.ItemsOfType(17); // Upgrade Components
+			for (var i in obj) {
+				var result = obj[i];	
+
+				if (parseInt(result.rarity) < 3) continue;
+
+				if (result.offer_price_change_last_hour < 0 || (result.offer_availability < 1.5 * result.sale_availability)) continue;
+				
+				var name = result.name;
+
+				if (parseInt(result.offer_availability) <= 0 || (parseInt(result.sub_type_id) != 2 && name.indexOf("Sigil") < 0)) continue;
+
+				name = name.split(' ').slice(2).join(' ');
+
+				
+				if (parseInt(result.sub_type_id) == 2)
+				{
+					ListViableRuneSigilItems(name, result, ectoPrice, armorsArray, resultArray);
+				}
+				else
+				{
+					ListViableRuneSigilItems(name, result, ectoPrice, weaponsArray, resultArray);
+				}								
+			}
+		}
+
+		function ResultSort(first, second)
+		{
+			if (first.profit == second.profit)
+				return 0;
+			if (first.profit < second.profit)
+				return -1;
+			else
+				return 1;
+		}
+
+		function match(suffix, data_id, itemName)
+		{
+			switch (data_id)
+			{
+		////////////////// Sigils //////////////////////////////
+
+				case 24548: // Superior Sigil of Fire
+					var collection = [ "^Al'ir'aska$", "^Mjolnir$", "^Titan's Vengance$", "^Volcanus$", "^Magmaton$", "^Mystic Battlehammer$" ];
+					break;
+				case 24551: // Superior Sigil of Water
+					var collection = [ "^Azure Railgun$", "^Droknar's Short Bow$", "^Nitro$", "^Droknar's Recurve Bow$", "^Arcanus Obscurus$", "^Ambrosia$" ];
+					break;
+				case 24554: // Superior Sigil of Air
+					var collection = [ "^Moonshine$", "^Peasant's Solution$", "^Bite of the Ebon Viper$", "^Khrysaor the Golden Sword$", "^Crystalline Blade$"];
+					break;
+				case 24555: // Superior Sigil of Ice
+					var collection = [ "^The Maelstrom$", "^Naga Fang$", "^Eir's Longbow$", "^Jormag's Breath$", "^Wintersbite$"];
+					break;
+				case 24560: // Superior Sigil of Earth
+					var collection = [ "^Berserker's Mace$", "^Melandru's Gaze$", "^Adder's Hiss$", "^Axiquiotl$", "^Serpentsniper$", "^Éibhear Finn$", "^Final Curse$", "^Oikoumene$", "^Ironfist$"];
+					break;
+				case 24561: // Superior Sigil of Rage
+					var collection = [ "^Gearbore$", "^Dhuumseal$", "^Alderune's Last Stand$", "^Hypnotic Scepter$", "^Kryta's Embrace$", "^Limitless Furnace$", "^Venom$", "^Glint's Scale$", "^Rodgort's Flame$", "^Carcharias$", "^The Bard$", "^Rage$", "^Howl$", "^The Energizer$", "^Storm$", "^Spirit Links$", "^Chaos Gun$", "^Abyssal Scepter$", "^Leaf of Kudzu$", "^The Chosen$", "^Tooth of Frostfang$", "^The Hunter$", "^Zap$", "^The Lover$", "^Spark$", "^Dawn$", "^The Colossus$", "^The Legend$", "^Dusk$"];
+					break;
+				case 24570: // Superior Sigil of Blood
+					var collection = [ "^Coiler$", "^Eye of Rodgort$", "^Lidless Eye$", "^The Fate of Menzies$", "^Unspoken Curse$", "^Super Hyperbeam Alpha$", "^Malefacterym$", "^Deathwish$", "^Mirage$", "^Mystic Caller$", "^Mystic Cudgel$", "^Mystic Rifle$", "^Mystic Speargun$", "^Mystic Torch$", "^Mystic Trident$", "^Mystic Wand$"];
+					break;
+				case 24571: // Superior Sigil of Purity
+					var collection = [ "^Sarraceinaceae$", "^Shield of the Moon$", "^Azureflame$", "^Aether$", "^Glimmerfang$", "^Serpentstone$", "^Mystic Crescent$", "^Mystic Hornbow$"];
+					break;
+				case 24572: // Superior Sigil of Nullification
+					var collection = [ "^Grimward$", "^Eidolon$", "^Soulshard$", "^Naegling$", "^Wall of the Mists$", "^Reaver of the Mists$", "^Vision of the Mists$", "^The Anomaly$", "^Lyss$", "^Mystic Barricade$", "^Mystic Claymore$", "^Mystic Pistol$", "^Mystic Staff$"];
+					break;
+				case 24575: // Superior Sigil of Bloodlust
+					var collection = [ "^The Stingray$", "^Phoenix Talon$", "^The Ugly Stick$", "^Tsunami$", "^Avirdanag$", "^Honor of Humanity$", "^Mystic Battleaxe$"];
+					break;
+				case 24578: // Superior Sigil of Corruption
+					var collection = [ "^Atlatl$", "^Ganadriva$", "^Delusion$", "^Kymswarden$", "^Winged Spatha$", "^Jaws of Death$"];
+					break;
+				case 24580: // Superior Sigil of Perception
+					var collection = [ "^Coldsnap$", "^Kryta's Salvation$"];
+					break;
+				case 24582: // Superior Sigil of Life
+					var collection = [ "^Siren's Call$", "^Foefire's Essence$", "^Remnant of Ascalon$", "^Resonator$", "^Skybringer$"];
+					break;
+				case 24583: // Superior Sigil of Demon Summoning
+					var collection = [ "^Bloodseeker$", "^Gaze$", "^Stygian Blade$"];
+					break;
+				case 24591: // Superior Sigil of Luck
+					var collection = [ "^Infinite Light$" ];
+					break;
+				case 24592: // Superior Sigil of Stamina
+					var collection = [ "^Rivetwall$", "^Vera$", "^X7-10 Alpha$", "^Rhongomyniad$", "^Goblet of Kings$", "^Immobulus$"];
+					break;
+				case 24594: // Superior Sigil of Restoration
+					var collection = [ "^Firelighter$", "^Master Blaster$", "^Drakevenom$", "^Knot of Justice$", "^Memory of the Sky$"];
+					break;
+				case 24597: // Superior Sigil of Hydromancy
+					var collection = [ "^Sun God's Gift$", "^Horn of the Rogue Bull$", "^Malachidean$", "^The Punisher$", "^Wintersbark$", "^Tear of Grenth$", "^Jormag's Needle$", "^Mystic Spike$"];
+					break;
+				case 24599: // Superior Sigil of Leeching
+					var collection = [ "^Scorchrazor's Fist$", "^Mojo$", "^Drakestrike$", "^Ak-Muhl's Jaw$", "^Anura$"];
+					break;
+				case 24600: // Superior Sigil of Intelligence
+					var collection = [ "^Beacon of the True Legions$", "^Éibhear Dunn$", "^Adam$", "^Brandt$", "^Guardian of the Six$"];
+					break;
+				case 24601: // Superior Sigil of Battle
+					var collection = [ "^Cooguloosh$", "^Claws of the Desert$", "^Shield of the Wing$", "^Kodanroar$", "^Ebonblade$"];
+					break;
+				case 24605: // Superior Sigil of Geomancy
+					var collection = [ "^The Hunt$", "^Infinite Wisdom$", "^Handheld Disaster$", "^Emberglow$", "^Song of the Numberless Pack$", "^Heart of Mellaggan$", "^Flux Matrix$", "^Mystic Artifact$"];
+					break;
+				case 24607: // Superior Sigil of Energy
+					var collection = [ "^Tinwail$", "^Defiant Blaze$", "^Chalice of the Gods$", "^Fixer Upper$", "^Courage$"];
+					break;
+				case 24612: // Superior Sigil of Agony
+					var collection = [ "^Droknar's Forgehammer$", "^Urchin's Needles$"];
+					break;
+				case 24615: // Superior Sigil of Force
+					var collection = [ "^Black Fleet Bludgeon$", "^Trident of the True Legion$", "^The Briny Deep$", "^Rusttooth$", "^Bow of the Pale Stag$", "^Faithful$", "^Imryldyeen$", "^Big Juju$", "^Maw of the Damned$", "^Twin Sisters$", "^Mystic Sword$"];
+					break;
+				case 24618: // Superior Sigil of Accuracy
+					var collection = [ "^Blaze of the Serpents$", "^Accursed Chains$", "^Windstorm$", "^Flamebelcher$", "^Spade of the Deep$", "^Combustion$", "^Bow of the White Hart$", "^Eir's Short Bow$", "^Ruinmaker$", "^Moonshank$", "^Usoku's Needle$", "^Charrzooka$"];
+					break;
+				case 24621: // Superior Sigil of Peril
+					var collection = [ "^Breath of Flame$", "^Foefire's Power$", "^Kenshi's Wing$", "^Ilya$", "^Whisperblade$", "^Illusion$", "^Ignus Fatuus$", "^Mystic Spear$"];
+					break;
+				case 24624: // Superior Sigil of Smoldering
+					var collection = [ "^Dragonfury$", "^Emberspire$", "^Venomstriker$", "^Firebringer$"];
+					break;
+				case 24627: // Superior Sigil of Hobbling
+					var collection = [ "^Beacon of Kryta$", "^Silence$", "^Labrys$", "^Dreadwing$"];
+					break;
+				case 24630: // Superior Sigil of Chilling
+					var collection = [ "^Spectral Wave Modulator$", "^Dragonshot$", "^Bramblethorne$", "^Godswalk Enchiridion$"];
+					break;
+				case 24632: // Superior Sigil of Venom
+					var collection = [ "^Dragonspine$", "^Ophidian$", "^Trosa's Short Bow$", "^Squeedily Spooch$"];
+					break;
+				case 24636: // Superior Sigil of Debility
+					var collection = [ "^Razorstone$", "^Jora's Defender$", "^Malice$", "^Cragstone$"];
+					break;
+				case 24648: // Superior Sigil of Grawl Slaying
+					var collection = [ "^Kevin$" ];
+					break;
+				case 24658: // Superior Sigil of Serpent Slaying
+					var collection = [ "^Steamfire$", "^Gungnir$", "^Blastmaster 3000$"];
+					break;
+				case 36053: // Superior Sigil of the Night
+					var collection = [ "^The Mad Moon$", "^Arachnophobia$", "^The Crossing$"];
+					break;
+
+		////////////////// Runes //////////////////////////////
+
+				case 24687: // Superior Rune of the Afflicted
+					var collection = [ "^Brutus", "^Sheena" ];
+					break;
+				case 24688: // Superior Rune of the Lich
+					var collection = [ "^Khilbron" ];
+					break;
+				case 24691: // Superior Rune of the Traveler
+					var collection = [ "^Yakkington" ];
+					break;
+				case 24696: // Superior Rune of the Flock
+					var collection = [ "^Zho" ];
+					break;
+				case 24699: // Superior Rune of the Dolyak
+					var collection = [ "^Jalis" ];
+					break;	
+				case 24702: // Superior Rune of the Pack
+					var collection = [ "^Aidan" ];
+					break;	
+				case 24703: // Superior Rune of Infiltration
+					var collection = [ "^Nika" ];
+					break;	
+				case 24708: // Superior Rune of Mercy
+					var collection = [ "^Tahlkora" ];
+					break;	
+				case 24711: // Superior Rune of Vampirism
+					var collection = [ "^Rurik" ];
+					break;	
+				case 24714: // Superior Rune of Strength
+					var collection = [ "^Devona", "^Ogden" ];
+					break;	
+				case 24717: // Superior Rune of Rage
+					var collection = [ "^Shiro" ];
+					break;	
+				case 24723: // Superior Rune of the Eagle
+					var collection = [ "^Errol" ];
+					break;	
+				case 24738: // Superior Rune of Scavenging
+					var collection = [ "^Jatoro" ];
+					break;	
+				case 24765: // Superior Rune of Balthazar
+					var collection = [ "^Norgu", "^Koss" ];
+					break;	
+				case 24768: // Superior Rune of Dwayna
+					var collection = [ "^Mhenlo" ];
+					break;	
+				case 24771: // Superior Rune of Melandru
+					var collection = [ "^Reyna" ];
+					break;	
+				case 24779: // Superior Rune of Grenth
+					var collection = [ "^Galrath" ];
+					break;	
+				case 24788: // Superior Rune of the Centaur
+					var collection = [ "^Zhed" ];
+					break;	
+				case 24797: // Superior Rune of Flame Legion
+					var collection = [ "^Vatlaaw" ];
+					break;	
+				default:
+					var collection = [];
+					break;		
+						
+			}
+
+			collection.push(suffix+"$");
+
+			for (var i in collection)
+			{
+				if (!itemName.match(collection[i])) continue;
+
+				return true;		
+			}
+			return false;
+		}
+
+	</script>
+</job>

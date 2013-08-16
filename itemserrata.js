@@ -821,5 +821,51 @@ var itemsErrata = [
 						SkillPointCost: 1.0
 					}
 			]
+		},
+		{
+			ID: 682026,
+			ExternalID: 67277,
+			DataID: 12772,
+			Icon: "http://media-ascalon.cursecdn.com/avatars/thumbnails/118/422/32/32/339979.png",
+			Name: "Mangos in Bulk",
+			Rarity: 2,
+			Value: 0,
+			Defense: 0,
+			MinPower: 0,
+			MaxPower: 0,
+			Type: 8,
+			Description: "Double-click to unpack.",
+			Level: 70,
+			RequiredLevel: 0,
+			Stats : [],
+			SoldBy : [
+					{
+						NPCExternalID: 700004,
+						KarmaCost: 203
+					}
+			]
+		},
+		{
+			ID: 691252,
+			ExternalID: 2875,
+			DataID: 8576,
+			Icon: "http://media-ascalon.cursecdn.com/avatars/thumbnails/115/99/32/32/63089.png",
+			Name: "Bottle[s] of Rice Wine",
+			Rarity: 2,
+			Value: 0,
+			Defense: 0,
+			MinPower: 0,
+			MaxPower: 0,
+			Type: 4,
+			Level: 5,
+			RequiredLevel: 0,
+			ConsumableType: 9,
+			Stats : [],
+			SoldBy : [
+					{
+						NPCExternalID: 700005,
+						GoldCost: 16
+					}
+			]
 		}															
 	];

@@ -867,5 +867,36 @@ var itemsErrata = [
 						GoldCost: 16
 					}
 			]
+		},
+		{
+			ID: 682049,
+			ExternalID: 67300,
+			DataID: 12795,
+			Icon: "http://media-ascalon.cursecdn.com/avatars/thumbnails/118/445/32/32/340002.png",
+			Name: "Lemons in Bulk",
+			Rarity: 2,
+			Value: 0,
+			Defense: 0,
+			MinPower: 0,
+			MaxPower: 0,
+			Type: 8,
+			Description: "Double-click to unpack.",
+			Level: 6,
+			RequiredLevel: 0,
+			Stats : [],
+			SoldBy : [
+					{
+  						NPCExternalID: 237936,
+  						KarmaCost: 35
+					},
+					{
+  						NPCExternalID: 266936,
+  						KarmaCost: 35
+					},
+					{
+  						NPCExternalID: 77936,
+  						KarmaCost: 35
+					}
+			]
 		}															
 	];

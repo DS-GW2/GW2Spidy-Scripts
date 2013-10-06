@@ -41,27 +41,6 @@
 				}
 				startId = commonOre[index].item_id;
 				promotedId = commonOre[index+1].item_id;
-
-				/*if (index == 2)
-				{
-					startId = 19699; // Iron Ore
-					// we still use platinum as promotedId even though 1 gold ore 
-					// can be used as the promoted item in the formula
-					// ASSUMPTION: price of 1 gold ore and 1 platinum ore are close enough for this difference
-					//  to be negligible.
-				}
-				else
-				{
-					startId = commonOre[index].item_id;
-				}
-				if (index == 0) // Copper can only be promoted to Iron
-				{
-					promotedId = 19699; // Iron Ore
-				}
-				else
-				{
-					promotedId = commonOre[index+1].item_id;
-				}*/
 				break;
 			case "jewel":
 				if (index == 0)
@@ -195,7 +174,6 @@
 
 		var startItem = spidy.ItemData(startId);
 		var promotedItem = spidy.ItemData(promotedId);
-		//if (index > 4) index = 4;
 		var dustItem = spidy.ItemData(fineDust[index+1].item_id);
 
 		var cost;
@@ -245,7 +223,7 @@
 
 		function Usage()
 		{
-			WScript.Echo ("cscript promote.wsf <cloth|ore|leather|log|bone|claw|fang|scale|totem|venomsac|blood|dust|essence|onyx|molten|glacial|destroyer|crystal|corrupted|charged> <1 to 5 tier to promote FROM>");
+			WScript.Echo ("cscript promote.wsf <cloth|bolt|ore|jewel|ingot|jewelingot|leather|square|log|plank|bone|claw|fang|scale|totem|venomsac|blood|dust|essence|onyx|molten|glacial|destroyer|crystal|corrupted|charged> <1 to 5 tier to promote FROM>");
 			WScript.Echo ("Note: Second parameter limited to <1 to 4> for Rare crafting material promotions.");
                         WScript.Quit();
 		}

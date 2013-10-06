@@ -25,20 +25,43 @@
 			}
 		];
 
-
-		var commonOre = [
+		var commonBolt = [
 			{
-				name: "Copper Ore",
-				item_id: 19697
+				name: "Bolt of Jute",
+				item_id: 19720
+			},
+			{
+				name: "Bolt of Wool",
+				item_id: 19740
+			},
+			{
+				name: "Bolt of Cotton",
+				item_id: 19742
+			},
+			{
+				name: "Bolt of Linen",
+				item_id: 19744
+			},
+			{
+				name: "Bolt of Silk",
+				item_id: 19747
+			},
+			{
+				name: "Bolt of Gossamer",
+				item_id: 19746
+			}
+		];
+
+
+		var commonJewel = [
+			{
+				name: "Silver Ore",
+				item_id: 19703
 			},
 			{
 				name: "Silver Ore",
 				item_id: 19703
 			},
-			/*{
-				name: "Iron Ore",
-				item_id: 19699
-			},*/
 			{
 				name: "Gold Ore",
 				item_id: 19698
@@ -54,6 +77,87 @@
 			{
 				name: "Orichalcum Ore",
 				item_id: 19701
+			}
+		];
+
+		var jewelIngot = [
+			{
+				name: "Copper Ingot",
+				item_id: 19680
+			},
+			{
+				name: "Silver Ingot",
+				item_id: 19687
+			},
+			{
+				name: "Gold Ingot",
+				item_id: 19682
+			},
+			{
+				name: "Platinum Ingot",
+				item_id: 19686
+			},
+			{
+				name: "Mithril Ingot",
+				item_id: 19684
+			},
+			{
+				name: "Orichalcum Ingot",
+				item_id: 19685
+			}
+		];
+
+		var commonOre = [
+			{
+				name: "Copper Ore",
+				item_id: 19697
+			},
+			{
+				name: "Iron Ore",
+				item_id: 19699
+			},
+			{
+				name: "Platinum Ore", // tier 4
+				item_id: 19702
+			},
+			{
+				name: "Platinum Ore", // tier 4
+				item_id: 19702
+			},
+			{
+				name: "Mithril Ore",  // tier 5
+				item_id: 19700
+			},
+			{
+				name: "Orichalcum Ore", // tier 6
+				item_id: 19701
+			}
+		];
+
+		var commonIngot = [
+			{
+				name: "Bronze Ingot",
+				item_id: 19679
+			},
+			{
+				name: "Iron Ingot",
+				item_id: 19683
+			},
+			{
+				name: "Steel Ingot",
+				item_id: 19688
+			},
+			{
+				name: "Darksteel Ingot",
+				item_id: 19681
+			},
+			{
+				name: "Mithril Ingot",
+				item_id: 19684
+			},
+			{
+				name: "Orichalcum Ingot",
+				item_id: 19685
 			}
 		];
 
@@ -84,6 +188,33 @@
 			}
 		];
 
+		var commonSquare = [
+			{
+				name: "Stretched Rawhide Leather Square",
+				item_id: 19738
+			},
+			{
+				name: "Cured Thin Leather Square",
+				item_id: 19733
+			},
+			{
+				name: "Cured Coarse Leather Square",
+				item_id: 19734
+			},
+			{
+				name: "Cured Rugged Leather Square",
+				item_id: 19736
+			},
+			{
+				name: "Cured Thick Leather Square",
+				item_id: 19735
+			},
+			{
+				name: "Cured Hardened Leather Square",
+				item_id: 19737
+			}
+		];
+
 		var commonLog = [
 			{
 				name: "Green Wood Log",
@@ -108,6 +239,33 @@
 			{
 				name: "Ancient Wood Log",
 				item_id: 19725
+			}
+		];
+
+		var commonPlank = [
+			{
+				name: "Green Wood Plank",
+				item_id: 19710
+			},
+			{
+				name: "Soft Wood Plank",
+				item_id: 19713
+			},
+			{
+				name: "Seasoned Wood Plank",
+				item_id: 19714
+			},
+			{
+				name: "Hard Wood Plank",
+				item_id: 19711
+			},
+			{
+				name: "Elder Wood Plank",
+				item_id: 19709
+			},
+			{
+				name: "Ancient Wood Plank",
+				item_id: 19712
 			}
 		];
 

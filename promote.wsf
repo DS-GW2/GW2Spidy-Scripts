@@ -30,8 +30,19 @@
 				startId = commonCloth[index].item_id;
 				promotedId = commonCloth[index+1].item_id;
 				break;
+			case "bolt":
+				startId = commonBolt[index].item_id;
+				promotedId = commonBolt[index+1].item_id;
+				break;
 			case "ore":
 				if (index == 2)
+				{
+					index = 3;	
+				}
+				startId = commonOre[index].item_id;
+				promotedId = commonOre[index+1].item_id;
+
+				/*if (index == 2)
 				{
 					startId = 19699; // Iron Ore
 					// we still use platinum as promotedId even though 1 gold ore 
@@ -50,15 +61,43 @@
 				else
 				{
 					promotedId = commonOre[index+1].item_id;
+				}*/
+				break;
+			case "jewel":
+				if (index == 0)
+				{
+					index = 1;	
 				}
+				startId = commonJewel[index].item_id;
+				promotedId = commonJewel[index+1].item_id;
+				break;
+			case "ingot":
+				startId = commonIngot[index].item_id;
+				promotedId = commonIngot[index+1].item_id;
+				if (index == 3) // Darksteel Ingot to Mithril Ingot
+				{
+					index = 2; // Use Luminous Dust instead
+				}
+				break;
+			case "jewelingot":
+				startId = jewelIngot[index].item_id;
+				promotedId = jewelIngot[index+1].item_id;
 				break;
 			case "leather":
 				startId = commonLeather[index].item_id;
 				promotedId = commonLeather[index+1].item_id;
 				break;
+			case "square":
+				startId = commonSquare[index].item_id;
+				promotedId = commonSquare[index+1].item_id;
+				break;
 			case "log":
 				startId = commonLog[index].item_id;
 				promotedId = commonLog[index+1].item_id;
+				break;
+			case "plank":
+				startId = commonPlank[index].item_id;
+				promotedId = commonPlank[index+1].item_id;
 				break;
 			case "bone":
 				startId = fineBones[index].item_id;
@@ -156,6 +195,7 @@
 
 		var startItem = spidy.ItemData(startId);
 		var promotedItem = spidy.ItemData(promotedId);
+		//if (index > 4) index = 4;
 		var dustItem = spidy.ItemData(fineDust[index+1].item_id);
 
 		var cost;

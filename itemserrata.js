@@ -898,5 +898,51 @@ var itemsErrata = [
   						KarmaCost: 35
 					}
 			]
+		},
+		{
+			ID: 1100000,
+			ExternalID: 63170,
+			DataID: 46752,
+			Icon: "http://media-ascalon.cursecdn.com/avatars/thumbnails/115/6/32/32/65636.png",
+			Name: "Augur's Stone",
+			Rarity: 8,
+			Value: 320,
+			Defense: 0,
+			MinPower: 0,
+			MaxPower: 0,
+			Type: 1,
+			Description: "Used in crafting Ascended items.",
+			Level: 0,
+			RequiredLevel: 0,
+			Stats : [],
+			SoldBy : [
+					{
+						NPCExternalID: 700003,
+						SkillPointCost: 20.0
+					}
+			]
+		},
+		{
+			ID: 1100001,
+			ExternalID: 63170,
+			DataID: 46747,
+			Icon: "http://media-ascalon.cursecdn.com/avatars/thumbnails/115/6/32/32/65636.png",
+			Name: "Thermocatalytic Reagent",
+			Rarity: 8,
+			Value: 80,
+			Defense: 0,
+			MinPower: 0,
+			MaxPower: 0,
+			Type: 7,
+			Description: "Used in the crafting of ascended items. Can be purchased from master craftsmen.",
+			Level: 0,
+			RequiredLevel: 0,
+			Stats : [],
+			SoldBy : [
+					{
+						NPCExternalID: 700000,
+						GoldCost: 149.6
+					}
+			]
 		}															
 	];

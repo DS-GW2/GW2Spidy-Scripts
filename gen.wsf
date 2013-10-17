@@ -15,7 +15,7 @@
 					Name: commonMat[i+1].name,
 					Rating: 0,
 					Type: 9,
-					Count: 15, // average?
+					Count: i == 4 ? 17 : 65, // average?
 					CreatedItemId: commonMat[i+1].item_id,
 					CreatedDataId: commonMat[i+1].item_id,
 					RequiresRecipeItem: false,
@@ -63,7 +63,7 @@
 					Name: mat[i+1].name,
 					Rating: 0,
 					Type: 9,
-					Count: 9, // average?
+					Count: i == 4 ? 6 : 15, // average?
 					CreatedItemId: mat[i+1].item_id,
 					CreatedDataId: mat[i+1].item_id,
 					RequiresRecipeItem: false,
@@ -111,7 +111,7 @@
 					Name: mat[i+1].name,
 					Rating: 0,
 					Type: 9,
-					Count: 21, // average?
+					Count: i == 4 ? 17 : 65, // average?
 					CreatedItemId: mat[i+1].item_id,
 					CreatedDataId: mat[i+1].item_id,
 					RequiresRecipeItem: false,

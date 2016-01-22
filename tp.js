@@ -24,7 +24,7 @@
 		     //xmlhttp.setRequestHeader("Connection","close");
 		     xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 		     xmlhttp.setRequestHeader("Content-Length", postData.length);
-		     xmlhttp.setRequestHeader("Cookie", "__utma=159804514.1241832490.1346431770.1355787713.1356152976.52; __utmz=159804514.1356152976.52.45.utmcsr=client|utmccn=(not%20set)|utmcmd=(not%20set)");
+		     xmlhttp.setRequestHeader("Cookie", "s=A862224A-0041-4586-BCBD-E544C516E08A");
 		     // xmlhttp.setRequestHeader("DNT", "1");
 		     xmlhttp.setRequestHeader("Host", "account.guildwars2.com");
 		     xmlhttp.setRequestHeader("Origin", "https://account.guildwars2.com");

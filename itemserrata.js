@@ -944,5 +944,23 @@ var itemsErrata = [
 						GoldCost: 149.6
 					}
 			]
+		},
+		{
+			ID: 1100002,
+			ExternalID: 63170,
+			DataID: 9262,
+			Icon: "http://media-ascalon.cursecdn.com/avatars/thumbnails/115/6/32/32/65636.png",
+			Name: "Bag of Jewels",
+			Rarity: 2,
+			Value: 0,
+			Defense: 0,
+			MinPower: 0,
+			MaxPower: 0,
+			Type: 8,
+			Description: "Double-click to open.",
+			Level: 0,
+			RequiredLevel: 0,
+			Stats : [],
+			SoldBy : []
 		}															
 	];

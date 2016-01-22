@@ -4,10 +4,12 @@
 	<Script language="JScript" src="mysticweapons1.js" />
 	<script language="JScript">
 		var result = new Array();
-		function ProcessCommonCraftMats(commonMat, idCount)
+		function ProcessCommonCraftMats(commonMat, idCount, start)
 		{
-			for (var i = 0; i < commonMat.length - 1; i++)
+			start = start || 0;
+			for (var i = start; i < commonMat.length - 1; i++)
 			{
+//WScript.Echo(i + " " + commonMat[i+1].name + " " + fineDust[i+1].name);
 				var record = {
 					ID: 0,
 					ExternalID: 0,
@@ -15,7 +17,7 @@
 					Name: commonMat[i+1].name,
 					Rating: 0,
 					Type: 9,
-					Count: i == 4 ? 17 : 65, // average?
+					Count: i == 4 ? 17 : 80, // average?
 					CreatedItemId: commonMat[i+1].item_id,
 					CreatedDataId: commonMat[i+1].item_id,
 					RequiresRecipeItem: false,
@@ -43,6 +45,61 @@
 				var ingredientRecord4 = {
 					ItemID: 20796,
 					Count: i+1
+				};
+				record.Ingredients.push(ingredientRecord4);
+
+				result.push(record);
+				idCount++;
+			}
+			return idCount;
+		}
+
+		function ProcessRefinedCraftMats(commonMat, idCount, special)
+		{
+			special = special || 0;
+			for (var i = 0; i < commonMat.length - 1; i++)
+			{
+//WScript.Echo(i + " " + commonMat[i+1].name + " " + ((special == 1 && i == 3) ? fineDust[i].name : fineDust[i+1].name));
+				var record = {
+					ID: 0,
+					ExternalID: 0,
+					DataID: idCount,
+					Name: commonMat[i+1].name,
+					Rating: 0,
+					Type: 9,
+					Count: i == 4 ? 17 : 80, // average?
+					CreatedItemId: commonMat[i+1].item_id,
+					CreatedDataId: commonMat[i+1].item_id,
+					RequiresRecipeItem: false,
+					Ingredients: new Array()
+				};
+				var ingredientRecord = {
+					ItemID: commonMat[i].item_id,
+					Count: 250
+				};
+				record.Ingredients.push(ingredientRecord);
+
+				var ingredientRecord2 = {
+					ItemID: commonMat[i+1].item_id,
+					Count: 1
+				};
+				record.Ingredients.push(ingredientRecord2);
+
+				var index = i;
+				if (special == 1 && i >= 3)
+				{
+					index = i - 1;
+				}
+
+				var ingredientRecord3 = {
+					ItemID: fineDust[index+1].item_id,
+					Count: 5
+				};
+				record.Ingredients.push(ingredientRecord3);
+
+				var ingredientRecord4 = {
+					ItemID: 20796,
+					Count: (index+1) * 2
 				};
 				record.Ingredients.push(ingredientRecord4);
 
@@ -111,7 +168,7 @@
 					Name: mat[i+1].name,
 					Rating: 0,
 					Type: 9,
-					Count: i == 4 ? 17 : 65, // average?
+					Count: i == 4 ? 17 : 80, // average?
 					CreatedItemId: mat[i+1].item_id,
 					CreatedDataId: mat[i+1].item_id,
 					RequiresRecipeItem: false,
@@ -195,7 +252,7 @@
 		}
 
 		var idCount = 10000;
-		for (var i = 0; i < mysticWeapons.length; i++)
+		for (var i = 0; i < mysticWeapons.length - 1; i++)
 		{
 			var record = {
 				ID: 0,
@@ -244,11 +301,16 @@
 			idCount++;			
 		};
 
+		idCount = ProcessRefinedCraftMats(commonBolt, idCount);
+		idCount = ProcessRefinedCraftMats(commonSquare, idCount);
+		idCount = ProcessRefinedCraftMats(commonPlank, idCount);
+		idCount = ProcessRefinedCraftMats(jewelIngot, idCount);
+		idCount = ProcessRefinedCraftMats(commonIngot, idCount, 1);
 		idCount = ProcessCommonCraftMats(commonCloth, idCount);
 		idCount = ProcessCommonCraftMats(commonLeather, idCount);
 		idCount = ProcessCommonCraftMats(commonLog, idCount);
 		idCount = ProcessCommonCraftMats(commonOre1, idCount);
-		idCount = ProcessCommonCraftMats(commonOre, idCount);
+		idCount = ProcessCommonCraftMats(commonOre, idCount, 1);
 
 		idCount = ProcessFineCraftMats(fineBones, idCount);
 		idCount = ProcessFineCraftMats(fineClaws, idCount);

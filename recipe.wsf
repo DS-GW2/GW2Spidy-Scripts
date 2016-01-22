@@ -6,7 +6,7 @@
 
 
 		// Sorted for faster searching.  13716 is Eye of Power Scepter.
-		var blackList = [ 13716, 36521, 36524, 36533, 36536, 36539, 36545, 36551, 36554, 36557, 36560, 36563, 36566, 36569, 36575, 36581, 36587, 36590, 36593 ]; 
+		var blackList = [ 3954, 3955, 3956, 13716, 36521, 36524, 36533, 36536, 36539, 36545, 36551, 36554, 36557, 36560, 36563, 36566, 36569, 36575, 36581, 36587, 36590, 36593 ]; 
 
 		var resultArray = new Array();
 		var disciplinesList = spidy.DisciplinesList();

@@ -684,9 +684,13 @@ var mysticWeapons = [
 				count: 250,
 				item_id: 13004
 			},
-			mat4: {
+			/*mat4: {
 				count: 0,
 				item_id: 13243
+			}*/
+			mat4: {
+				count: 0,
+				item_id: 20852
 			}
 		},
 		{

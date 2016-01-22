@@ -14,8 +14,8 @@
         spidy = new GW2Spidy();
 
 		//var obj = spidy.ItemsOfTypes(0, 3, 5, 15, 17, 18);
-		var obj = spidy.ItemsOfTypes(0, 3, 5, 15, 17);
-		//var obj = spidy.ItemsOfTypes(15, 17);
+		//var obj = spidy.ItemsOfTypes(0, 3, 5, 15, 17);
+		var obj = spidy.ItemsOfTypes(0, 18);
 
 		var resultArray = new Array();
 

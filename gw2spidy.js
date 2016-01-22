@@ -12,7 +12,7 @@ function GW2Spidy()
 	this.ItemData = getItemData;
 
 	this.BuyListings = getBuyListings;
-    this.SellListings = getSellListings;
+        this.SellListings = getSellListings;
 	this.SearchItems = searchItems;
 	this.AllRecipesList = getAllRecipesList;
 	this.RecipesOfDisciplines = getRecipesOfDisciplines;
@@ -22,6 +22,7 @@ function GW2Spidy()
 	
 	this.monthlyOfferAverage = monthlyOfferAverage;
 	this.monthlySellAverage = monthlySellAverage;
+	this.getSubType = getSubType;
 	
 	function monthlyOfferAverage(id)
 	{
@@ -90,6 +91,22 @@ function GW2Spidy()
 	       return _request('types').results;
 	}
 
+	function getSubType(typeList, item)
+	{
+		var list = typeList;
+		if (list == null) list = getTypesList();
+		for (var i in list) {
+			if (list[i].id == item.type_id)
+			{
+				list2 = list[i].subtypes;
+				for (var j in list2) {
+					if (list2[j].id == item.sub_type_id) return list2[j].name;					
+				}
+			}
+		}
+
+	}
+
 	function getDisciplinesList()
 	{
    		return _request('disciplines').results;
@@ -125,12 +142,18 @@ function GW2Spidy()
 
 	function getItemsOfType(typeId)
 	{
-		return _request('all-items', String(typeId)).results;
+		var list = _request('all-items', String(typeId)).results;
+		list = _getListFromGW2API(list);
+		return list;
 	}
 
         function getItemData(itemId)
 	{
-		return _request('item', String(itemId)).result;
+		var item = _request('item', String(itemId)).result;
+                var item2 = _request2('prices/' + String(itemId));
+                item.max_offer_unit_price = item2.buys.unit_price;
+                item.min_sale_unit_price = item2.sells.unit_price;
+                return item;
 	}
 
 	function getBuyListings(itemId, allPages)
@@ -183,7 +206,7 @@ function GW2Spidy()
 
 	function getRecipeData(recipeId)
 	{
-		return _request('recipe', String(recipeId));
+		return _request('recipe', String(recipeId)).result;
 	}
 
 	function getGemPrice()
@@ -269,10 +292,104 @@ function GW2Spidy()
 		xmlhttp.send();	
 	}
 
+	function _pluck(originalArr, prop) {
+	    var newArr = [];
+	    for(var i = 0; i < originalArr.length; i++) {
+	        newArr[i] = originalArr[i][prop];
+	    }
+	    return newArr;
+       }
+
+	function _getListFromGW2API(list)
+        {		
+		var maxCount = 175;
+		var ids;	
+		if (list.length <= maxCount)
+		{
+			ids = _pluck(list, "data_id").join(",");
+			return fillPrices(ids, list);			
+		}
+		else
+		{
+			var retList = new Array();
+			var base = 0;
+			var end;
+			while (base < list.length)
+			{
+				end = Math.min(base + maxCount, list.length);		
+				var list2 = list.slice(base, end);
+				ids = _pluck(list2, "data_id").join(",");
+ 				Array.prototype.push.apply(retList, fillPrices(ids, list2));
+				base = end;
+			}
+			return retList;
+		}
+	}
+
+	function fillPrices(ids, list)
+	{
+        var list2 = _request2('prices?ids=' + ids);
+		
+		var i = 0;
+		for (var item in list)
+		{
+					if (list2[i])
+					{
+						if (list2[i].buys && list2[i].buys !== "null" && list2[i].buys !== "undefined") item.max_offer_unit_price = list2[i].buys.unit_price;
+						if (list2[i].sells && list2[i].sells !== "null" && list2[i].sells !== "undefined") item.min_sale_unit_price = list2[i].sells.unit_price;
+					}
+			i++;
+		}
+		return list;
+	}
+	
+	function _request2()
+	{
+		var args = Array.prototype.slice.call(arguments)
+		//WScript.Echo(args.join("/"));
+		try {
+			_HttpGet2(args);
+		}
+		catch (e)
+		{	
+			WScript.Echo ("Error: " + e.number);	
+                        WScript.Echo ("Retrying...");
+
+			try {
+				_HttpGet2(args);
+			}
+			catch (e)
+			{
+				WScript.Echo ("Error: " + e.number);
+			}	
+		}
+			
+		//WScript.Echo (xmlhttp.getAllResponseHeaders());
+		//WScript.Echo (xmlhttp.responseText);
+		try {
+			var outputString = _JSONParse();
+		}
+		catch(e) 
+		{
+			//WScript.Echo ("JSON parsing error!  String: " + parseString);
+			WScript.Echo ("JSON parsing error!  Retrying...");
+			//_HttpGet2(args);
+			//var outputString = _JSONParse();
+		}
+         	return(outputString);
+	}
+
+	function _HttpGet2(args)
+	{
+		xmlhttp.open("GET", "https://api.guildwars2.com/v2/commerce/" + args.join("/"), false);				
+		xmlhttp.send();	
+	}
+
 	function _JSONParse()
 	{
-		var start = xmlhttp.responseText.indexOf("{");
-		var parseString = xmlhttp.responseText.substr(start);
+		//var start = xmlhttp.responseText.indexOf("{");
+		//var parseString = xmlhttp.responseText.substr(start);
+		var parseString = xmlhttp.responseText;
 		return JSON.parse(parseString);
 	}
 	

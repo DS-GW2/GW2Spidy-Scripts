@@ -101,7 +101,6 @@
 				var result = obj[i];	
 
 				if (result.sale_price_change_last_hour >= -50 || result.offer_price_change_last_hour < 0) continue;
-
 				if (result.sale_availability <= 0 || result.offer_availability < 1.5 * result.sale_availability) continue;				
 				
 				var resultTemp = {

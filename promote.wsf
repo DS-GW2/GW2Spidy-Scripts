@@ -3,7 +3,7 @@
         <Script language="JScript" src="gw2spidy.js" />
         <Script language="JScript" src="craftmats.js" />
 	<script language="JScript">
-                var spidy = new GW2Spidy();
+        var spidy = new GW2Spidy();
 
 		var COMMON_PROMOTION = 0;
 		var FINE_PROMOTION = 1;
@@ -182,17 +182,17 @@
 		{
 			case COMMON_PROMOTION:
 				cost = (parseInt(startItem.max_offer_unit_price) * 250) + parseInt(promotedItem.max_offer_unit_price) + (5 * parseInt(dustItem.max_offer_unit_price));
-				WScript.Echo ("Promoting 250 " + startItem.name + " into some " + promotedItem.name);
+				WScript.Echo ("Promoting 250 " + startItem.name + " into " + (index == 4 ? "10-40 (average: ~17) " : "40-180 ") + promotedItem.name);
 				break;
 
 			case FINE_PROMOTION:
 				cost = (parseInt(startItem.max_offer_unit_price) * 50) + parseInt(promotedItem.max_offer_unit_price) + (5 * parseInt(dustItem.max_offer_unit_price));
-				WScript.Echo ("Promoting 50 " + startItem.name + " into some " + promotedItem.name);
+				WScript.Echo ("Promoting 50 " + startItem.name + " into " + (index == 4 ? "3-12 (average: ~6) " : "7-40 (average: ~15) ") + promotedItem.name);
 				break;
 
 			case DUST_PROMOTION:
 				cost = (parseInt(startItem.max_offer_unit_price) * 250) + parseInt(promotedItem.max_offer_unit_price);
-				WScript.Echo ("Promoting 250 " + startItem.name + " into some " + promotedItem.name);
+				WScript.Echo ("Promoting 250 " + startItem.name + " into " + (index == 4 ? "10-40 (average: ~17) " : "40-180 ") + promotedItem.name);
 				break;
 
 			case RARE_PROMOTION:

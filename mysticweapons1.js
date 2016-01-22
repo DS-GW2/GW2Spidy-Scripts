@@ -23,6 +23,52 @@ var mysticWeapons = [
 			}
 		},
 		{
+			name: "Feathers of Dwyana",
+			item_id: 31073,
+			profit: 0,
+			craftCost: 0,
+			tpSalePrice: 0,
+			mat1: {
+				count: 100,
+				item_id: 19976
+			},
+			mat2: {
+				count: 1,
+				item_id: 19632
+			},
+			mat3: {
+				count: 20,
+				item_id: 24572
+			},
+			mat4: {
+				count: 1,
+				item_id: 20852
+			}
+		},
+		{
+			name: "Goblet of Kings",
+			item_id: 31049,
+			profit: 0,
+			craftCost: 0,
+			tpSalePrice: 0,
+			mat1: {
+				count: 30,
+				item_id: 19976
+			},
+			mat2: {
+				count: 1,
+				item_id: 9262
+			},
+			mat3: {
+				count: 250,
+				item_id: 19682
+			},
+			mat4: {
+				count: 1,
+				item_id: 20852
+			}
+		},
+		{
 			name: "Wintersbite",
 			item_id: 31072,
 			profit: 0,
@@ -184,7 +230,7 @@ var mysticWeapons = [
 			}
 		},
 		{
-			name: "FoeFire's Essence",
+			name: "FoeFire's Power",
 			item_id: 31078,
 			profit: 0,
 			craftCost: 0,
@@ -1174,8 +1220,8 @@ var mysticWeapons = [
 			}
 		},
 		{
-			name: "Titans' Vengance",
-			item_id: 31055,
+			name: "Jormag's Breath",
+			item_id: 31065,
 			profit: 0,
 			craftCost: 0,
 			tpSalePrice: 0,
@@ -1190,29 +1236,6 @@ var mysticWeapons = [
 			mat3: {
 				count: 50,
 				item_id: 24340
-			},
-			mat4: {
-				count: 1,
-				item_id: 20852
-			}
-		},
-		{
-			name: "Jormag's Needle",
-			item_id: 31105,
-			profit: 0,
-			craftCost: 0,
-			tpSalePrice: 0,
-			mat1: {
-				count: 50,
-				item_id: 19976
-			},
-			mat2: {
-				count: 50,
-				item_id: 24325
-			},
-			mat3: {
-				count: 50,
-				item_id: 24315
 			},
 			mat4: {
 				count: 1,
@@ -1838,6 +1861,144 @@ var mysticWeapons = [
 			mat4: {
 				count: 50,
 				item_id: 20799
+			}
+		},
+		{
+			name: "Superior Arrow Cart Blueprints",
+			item_id: 21260,
+			profit: 0,
+			craftCost: 0,
+			tpSalePrice: 0,
+			mat1: {
+				count: 5,
+				item_id: 19700
+			},
+			mat2: {
+				count: 5,
+				item_id: 19722
+			},
+			mat3: {
+				count: 1,
+				item_id: 20798
+			},
+			mat4: {
+				count: 2,
+				item_id: 21156
+			}
+		},
+		{
+			name: "Superior Ballista Blueprints",
+			item_id: 21261,
+			profit: 0,
+			craftCost: 0,
+			tpSalePrice: 0,
+			mat1: {
+				count: 5,
+				item_id: 19700
+			},
+			mat2: {
+				count: 5,
+				item_id: 19722
+			},
+			mat3: {
+				count: 1,
+				item_id: 20798
+			},
+			mat4: {
+				count: 2,
+				item_id: 21157
+			}
+		},
+		{
+			name: "Superior Catapult Blueprints",
+			item_id: 21262,
+			profit: 0,
+			craftCost: 0,
+			tpSalePrice: 0,
+			mat1: {
+				count: 5,
+				item_id: 19700
+			},
+			mat2: {
+				count: 5,
+				item_id: 19722
+			},
+			mat3: {
+				count: 1,
+				item_id: 20798
+			},
+			mat4: {
+				count: 2,
+				item_id: 21158
+			}
+		},
+		{
+			name: "Superior Flame Ram Blueprints",
+			item_id: 21263,
+			profit: 0,
+			craftCost: 0,
+			tpSalePrice: 0,
+			mat1: {
+				count: 5,
+				item_id: 19700
+			},
+			mat2: {
+				count: 5,
+				item_id: 19722
+			},
+			mat3: {
+				count: 1,
+				item_id: 20798
+			},
+			mat4: {
+				count: 2,
+				item_id: 21161
+			}
+		},
+		{
+			name: "Superior Trebuchet Blueprints",
+			item_id: 21264,
+			profit: 0,
+			craftCost: 0,
+			tpSalePrice: 0,
+			mat1: {
+				count: 10,
+				item_id: 19700
+			},
+			mat2: {
+				count: 10,
+				item_id: 19722
+			},
+			mat3: {
+				count: 1,
+				item_id: 20798
+			},
+			mat4: {
+				count: 2,
+				item_id: 21160
+			}
+		},
+		{
+			name: "Omega Siege Golem Blueprints",
+			item_id: 21259,
+			profit: 0,
+			craftCost: 0,
+			tpSalePrice: 0,
+			mat1: {
+				count: 10,
+				item_id: 19700
+			},
+			mat2: {
+				count: 10,
+				item_id: 19722
+			},
+			mat3: {
+				count: 3,
+				item_id: 20798
+			},
+			mat4: {
+				count: 5,
+				item_id: 21159
 			}
 		}
 	];
